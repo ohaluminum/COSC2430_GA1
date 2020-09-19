@@ -23,9 +23,47 @@ public:
     {
         head = nullptr;
     }
+    
+    //Add digir at the end
+    void addAtEnd(int info)
+    {
+        //1.Create a temperary digit
+        digit* temp = new digit;
 
+        //2.Fill the data
+        temp->info = info;
 
+        //3.Update the pointer
+        if (head == nullptr)
+        {
+            head = temp;
+        }
+        else
+        {
+            digit* prev = new digit;
+            prev = head;
 
+            while (prev->next != nullptr)
+            {
+                prev = prev->next;
+            }
+
+            temp->next = nullptr;
+            prev->next = temp;
+        }
+    }
+
+    void print()
+    {
+        digit* temp = new digit;
+        temp = head;
+
+        while (temp != nullptr)
+        {
+            cout << temp->info << endl;
+            temp = temp->next;
+        }
+    }
 };
 
 //Create a function to return the operator precedence
@@ -275,6 +313,69 @@ int readPassword(string str, istringstream& inSS)
 }
 
 //Create a function to read expression to Scarlet Linked list
+void readExpression(string name, int& password, int& numOfInvalid, ifstream& inFS, istringstream& inSS, digitList& ScarletList, digitList& TravisList)
+{
+    string expression;
+    int result;
+
+    while (getline(inFS, expression))
+    {
+        //Check if the line is empty
+        if (expression.empty())
+        {
+            continue;
+        }
+
+        if (expression == "Travis")
+        {
+            readExpression("Travis", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
+            break;
+        }
+        else if (expression == "Scarlet")
+        {
+            readExpression("Scarlet", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
+            break;
+        }
+
+        //If the line contains colon, read the password directly
+        if (hasColon(expression))
+        {
+            password = readPassword(expression, inSS);
+            break;
+        }
+
+        if (checkBalanced(expression))
+        {
+            result = evaluatePostfix(infixToPostfix(expression));
+
+            if (result > 0)
+            {
+                if (name == "Scarlet")
+                {
+                    ScarletList.addAtEnd(result);
+                    //Read in the linked list
+                    cout << "Scarlet" << endl;
+                }
+                else if (name == "Travis")
+                {
+                    TravisList.addAtEnd(result);
+                    //Read in the linked list
+                    cout << "Travis" << endl;
+                }
+            }
+            else if (result < 0)
+            {
+                //Look through two list 
+
+
+            }
+        }
+        else
+        {
+            numOfInvalid++;
+        }
+    }
+}
 
 
 
@@ -288,7 +389,7 @@ int main(int argc, char* argv[])
     //string output = am.get("output");
 
     //Test
-    string input = "input11.txt";
+    string input = "input12.txt";
     string output = "output11.txt";
 
     ifstream inFS;
@@ -313,10 +414,10 @@ int main(int argc, char* argv[])
         }
 
         string line;
-        string expression;
-        int password;
-        digitList Scarlet;
-        digitList Travis;
+        int password = 0;
+        int numOfInvalid = 0;
+        digitList ScarletList;
+        digitList TravisList;
 
         while (getline(inFS, line))
         {
@@ -334,55 +435,20 @@ int main(int argc, char* argv[])
 
             else if (line == "Scarlet")
             {
-                while (getline(inFS, expression))
-                {
-                    //Check if the line is empty
-                    if (line.empty())
-                    {
-                        continue;
-                    }
-
-                    if (expression == "Travis" || expression == "Scarlet")
-                    {
-                        break;
-                    }
-
-                    //If the line contains colon, read the password directly
-                    if (hasColon(expression))
-                    {
-                        password = readPassword(expression, inSS);
-                        break;
-                    }
-
-                    //Read in the linked list
-                    cout << "Scarlet" << endl;
-
-                }
+                readExpression("Scarlet", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
             }
 
             else if (line == "Travis")
             {
-                while (getline(inFS, expression))
-                {
-                    if (expression == "Scarlet" || expression == "Travis")
-                    {
-                        break;
-                    }
-
-                    //If the line contains colon, read the password directly
-                    if (hasColon(expression))
-                    {
-                        password = readPassword(expression, inSS);
-                        break;
-                    }
-
-                    //Read in the linked list
-                    cout << "Travis" << endl;
-                }
+                readExpression("Travis", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
             }
         }
 
+        ScarletList.print();
+        TravisList.print();
 
+        cout << password << endl;
+        cout << numOfInvalid << endl;
 
 
 
