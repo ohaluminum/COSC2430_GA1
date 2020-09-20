@@ -24,7 +24,7 @@ public:
         head = nullptr;
     }
     
-    //Add digir at the end
+    //Add digit at the end
     void addAtEnd(int info)
     {
         //1.Create a temperary digit
@@ -247,9 +247,9 @@ int evaluatePostfix(string postfix)
     int left;
     int right;
     int result;
-
+    
     //Traversing the Expression
-    for (unsigned int i = 0; i < postfix.length(); i++)
+    for (int i = 0; i < postfix.length(); i++)
     {
         //If postfix[i] is a digit, push it to the stack
         if (isdigit(postfix[i]))
@@ -289,97 +289,8 @@ bool hasColon(string str)
     return false;
 }
 
-//Create a function to read password
-int readPassword(string str, istringstream& inSS)
-{
-    string bin;
-    string password_str;
-    int password;
-
-    //Clear input string stream
-    inSS.clear();
-
-    //Using input string stream to read password line
-    inSS.str(str);
-
-    //Get rid of the useless infomation
-    getline(inSS, bin, ':');
-
-    //Read password
-    getline(inSS, password_str);
-    password = stoi(password_str);
-
-    return password;
-}
-
-//Create a function to read expression to Scarlet Linked list
-void readExpression(string name, int& password, int& numOfInvalid, ifstream& inFS, istringstream& inSS, digitList& ScarletList, digitList& TravisList)
-{
-    string expression;
-    int result;
-
-    while (getline(inFS, expression))
-    {
-        //Check if the line is empty
-        if (expression.empty())
-        {
-            continue;
-        }
-
-        if (expression == "Travis")
-        {
-            readExpression("Travis", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
-            break;
-        }
-        else if (expression == "Scarlet")
-        {
-            readExpression("Scarlet", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
-            break;
-        }
-
-        //If the line contains colon, read the password directly
-        if (hasColon(expression))
-        {
-            password = readPassword(expression, inSS);
-            break;
-        }
-
-        if (checkBalanced(expression))
-        {
-            result = evaluatePostfix(infixToPostfix(expression));
-
-            if (result > 0)
-            {
-                if (name == "Scarlet")
-                {
-                    ScarletList.addAtEnd(result);
-                    //Read in the linked list
-                    cout << "Scarlet" << endl;
-                }
-                else if (name == "Travis")
-                {
-                    TravisList.addAtEnd(result);
-                    //Read in the linked list
-                    cout << "Travis" << endl;
-                }
-            }
-            else if (result < 0)
-            {
-                //Look through two list 
-
-
-            }
-        }
-        else
-        {
-            numOfInvalid++;
-        }
-    }
-}
-
-
-
 // ------------------------------------------------ MAIN FUNCTION ----------------------------------------------------
+
 int main(int argc, char* argv[])
 {
     ArgumentManager am(argc, argv);
@@ -389,7 +300,7 @@ int main(int argc, char* argv[])
     //string output = am.get("output");
 
     //Test
-    string input = "input12.txt";
+    string input = "input13.txt";
     string output = "output11.txt";
 
     ifstream inFS;
@@ -413,9 +324,13 @@ int main(int argc, char* argv[])
             throw runtime_error("ERROR: File is empty");
         }
 
-        string line;
+        string line = "";
+        string currentUser = "";
+        string bin = "";
+        string password_str = "";
         int password = 0;
         int numOfInvalid = 0;
+        int result = 0;
         digitList ScarletList;
         digitList TravisList;
 
@@ -430,28 +345,68 @@ int main(int argc, char* argv[])
             //Only password line contains colon
             if (hasColon(line))
             {
-                password = readPassword(line, inSS);
+                //Clear input string stream
+                inSS.clear();
+
+                //Using input string stream to read password line
+                inSS.str(line);
+
+                //Get rid of the useless infomation
+                getline(inSS, bin, ':');
+
+                //Read password
+                getline(inSS, password_str);
+                password = stoi(password_str);
             }
 
             else if (line == "Scarlet")
             {
-                readExpression("Scarlet", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
+                currentUser = "Scarlet";
             }
 
             else if (line == "Travis")
             {
-                readExpression("Travis", password, numOfInvalid, inFS, inSS, ScarletList, TravisList);
+                currentUser = "Travis";
+            }
+            else
+            {
+                //If the expression is balanced, then evaluate the expression
+                if (checkBalanced(line))
+                {
+                    result = evaluatePostfix(infixToPostfix(line));
+                    if (result > 0)
+                    {
+                        if (currentUser == "Scarlet")
+                        {
+                            ScarletList.addAtEnd(result);
+                            cout << "Scarlet" << endl;
+                        }
+                        else if (currentUser == "Travis")
+                        {
+                            TravisList.addAtEnd(result);
+                            cout << "Travis" << endl;
+                        }
+                    }
+                    else if (result < 0)
+                    {
+                        //Check both list and delete something
+                    }
+                }
+                else
+                {
+                    numOfInvalid++;
+                }
             }
         }
 
+
         ScarletList.print();
+        cout << endl;
         TravisList.print();
+        cout << endl;
 
         cout << password << endl;
         cout << numOfInvalid << endl;
-
-
-
 
     }
     catch (runtime_error & e)
@@ -459,32 +414,9 @@ int main(int argc, char* argv[])
         outFS << e.what() << endl;
     }
 
-    //string check = "8-{(7+0-1)}-3";
-    //string postfix;
-    //int result;
-
-    //if (!checkBalanced(check))
-    //{
-    //    cout << "Not balanced" << endl;
-    //}
-    //else
-    //{
-    //    postfix = infixToPostfix(check);
-    //}
-
-    //result = evaluatePostfix(postfix);
-    //cout << postfix << ": " << result << endl;
-
-
-    //string test = "1234:";
-    //cout << hasColon(test) << endl;
-
-
-    //Close all files
     inFS.close();
     outFS.close();
 
     return 0;
-
 }
 
