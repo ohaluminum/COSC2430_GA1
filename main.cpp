@@ -23,6 +23,12 @@ public:
     {
         head = nullptr;
     }
+
+    //Getter function
+    digit* getHead()
+    {
+        return head;
+    }
     
     //Add digit at the end
     void addAtEnd(int info)
@@ -51,6 +57,57 @@ public:
             temp->next = nullptr;
             prev->next = temp;
         }
+    }
+
+    //Search if the linked list contains negative number (return the first negative number)
+    int searchNegative(digit* curr)
+    {
+        //If linked list is empty or reach the end of the linked list
+        if (curr == nullptr)
+        {
+            return 0;
+        }
+
+        //If the number is negative, return the number
+        if (curr->info < 0)
+        {
+            return curr->info;
+        }
+
+        return searchNegative(curr->next);
+    }
+
+    //Delete specific value in the linked list
+    bool deleteRecursively(digit* curr, int info)
+    {
+        //If linked list is empty or reach the end of the linked list
+        if (curr == nullptr)
+        {
+            return false;
+        }
+
+        //Special case: digit to be deleted is the first digit
+        if (curr->info == info)
+        {
+            head = head->next;
+            delete curr;
+
+            return true;
+        }
+
+        //Normal case: degit to be deleted is not the first digit
+        if (curr->next != nullptr && curr->next->info == info)
+        {
+            //Update the pointer
+            digit* temp = new digit;
+            temp = curr->next;
+            curr->next = temp->next;
+            delete temp;
+                                  
+            return true;
+        }
+
+        return deleteRecursively(curr->next, info);
     }
 
     void print()
@@ -249,7 +306,7 @@ int evaluatePostfix(string postfix)
     int result;
     
     //Traversing the Expression
-    for (int i = 0; i < postfix.length(); i++)
+    for (unsigned int i = 0; i < postfix.length(); i++)
     {
         //If postfix[i] is a digit, push it to the stack
         if (isdigit(postfix[i]))
@@ -301,7 +358,7 @@ int main(int argc, char* argv[])
 
     //Test
     string input = "input13.txt";
-    string output = "output11.txt";
+    string output = "output13.txt";
 
     ifstream inFS;
     ofstream outFS;
@@ -331,6 +388,7 @@ int main(int argc, char* argv[])
         int password = 0;
         int numOfInvalid = 0;
         int result = 0;
+        int negativeNum = 0;
         digitList ScarletList;
         digitList TravisList;
 
@@ -374,22 +432,14 @@ int main(int argc, char* argv[])
                 if (checkBalanced(line))
                 {
                     result = evaluatePostfix(infixToPostfix(line));
-                    if (result > 0)
+
+                    if (currentUser == "Scarlet")
                     {
-                        if (currentUser == "Scarlet")
-                        {
-                            ScarletList.addAtEnd(result);
-                            cout << "Scarlet" << endl;
-                        }
-                        else if (currentUser == "Travis")
-                        {
-                            TravisList.addAtEnd(result);
-                            cout << "Travis" << endl;
-                        }
+                        ScarletList.addAtEnd(result);
                     }
-                    else if (result < 0)
+                    else if (currentUser == "Travis")
                     {
-                        //Check both list and delete something
+                        TravisList.addAtEnd(result);
                     }
                 }
                 else
@@ -399,14 +449,87 @@ int main(int argc, char* argv[])
             }
         }
 
+        bool isDelete = false;
+
+        negativeNum = ScarletList.searchNegative(ScarletList.getHead());
+
+        //If the searchNegative function return 0, it means there is no negative number in the linked list 
+        while (negativeNum != 0)
+        {
+            //Delete negative number
+            ScarletList.deleteRecursively(ScarletList.getHead(), negativeNum);
+
+            //Delete correspond positive number
+            isDelete = ScarletList.deleteRecursively(ScarletList.getHead(), abs(negativeNum));
+
+            //If can not find number in Scarlet's list, try to find it in Travis's list 
+            if (!isDelete)
+            {
+                TravisList.deleteRecursively(TravisList.getHead(), abs(negativeNum));
+            }
+
+            negativeNum = ScarletList.searchNegative(ScarletList.getHead());
+        }
 
         ScarletList.print();
         cout << endl;
         TravisList.print();
         cout << endl;
 
-        cout << password << endl;
-        cout << numOfInvalid << endl;
+        negativeNum = TravisList.searchNegative(TravisList.getHead());
+
+        //If the searchNegative function return 0, it means there is no negative number in the linked list 
+        while (negativeNum != 0)
+        {
+            //Delete negative number
+            TravisList.deleteRecursively(TravisList.getHead(), negativeNum);
+
+            //Delete correspond positive number
+            isDelete = TravisList.deleteRecursively(TravisList.getHead(), abs(negativeNum));
+
+            //If can not find number in Travis's list, try to find it in Scarlet's list 
+            if (!isDelete)
+            {
+                ScarletList.deleteRecursively(ScarletList.getHead(), abs(negativeNum));
+            }
+
+            negativeNum = TravisList.searchNegative(TravisList.getHead());
+        }
+
+        //Print Scarlet's list to the output file
+        digit* temp = new digit;
+        temp = ScarletList.getHead();
+
+        outFS << "Scarlet: [";
+
+        while (temp->next != nullptr)
+        {
+            outFS << temp->info << ", ";
+            temp = temp->next;
+        }
+
+        outFS << temp->info << "]" << endl;
+
+        //Print Travis's list to the output file
+        temp = TravisList.getHead();
+
+        outFS << "Travis: [";
+
+        while (temp->next != nullptr)
+        {
+            outFS << temp->info << ", ";
+            temp = temp->next;
+        }
+
+        outFS << temp->info << "]" << endl;
+
+        ScarletList.print();
+        cout << endl;
+        TravisList.print();
+        cout << endl;
+
+        //cout << password << endl;
+        //cout << numOfInvalid << endl;
 
     }
     catch (runtime_error & e)

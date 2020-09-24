@@ -156,6 +156,9 @@
     <Text Include="input11.txt" />
     <Text Include="input12.txt" />
     <Text Include="input13.txt" />
+    <Text Include="output11.txt" />
+    <Text Include="output12.txt" />
+    <Text Include="output13.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h" />

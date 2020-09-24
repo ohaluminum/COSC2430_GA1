@@ -33,6 +33,15 @@
     <Text Include="input13.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="output11.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output13.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output12.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h">
