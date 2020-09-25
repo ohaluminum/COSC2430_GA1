@@ -2,6 +2,7 @@
 #include<fstream>
 #include<sstream>
 #include <stack>
+#include <string>
 #include "ArgumentManager.h"
 
 using namespace std;
@@ -16,12 +17,14 @@ class digitList
 {
 private:
     digit* head;
+    int size;
     
 public:
     //Constructor
     digitList()
     {
         head = nullptr;
+        size = 0;
     }
 
     //Getter function
@@ -30,33 +33,32 @@ public:
         return head;
     }
     
-    //Add digit at the end
-    void addAtEnd(int info)
+    //Add digit at the end of linked list using recursion
+    void addAtEndRecursively(digit* curr, int info)
     {
-        //1.Create a temperary digit
-        digit* temp = new digit;
-
-        //2.Fill the data
-        temp->info = info;
-
-        //3.Update the pointer
         if (head == nullptr)
         {
-            head = temp;
-        }
-        else
-        {
-            digit* prev = new digit;
-            prev = head;
-
-            while (prev->next != nullptr)
-            {
-                prev = prev->next;
-            }
-
+            digit* temp = new digit;
+            temp->info = info;
             temp->next = nullptr;
-            prev->next = temp;
+
+            head = temp;
+            size++;
+            return;
         }
+
+        if (curr->next == nullptr)
+        {
+            digit* temp = new digit;
+            temp->info = info;
+            temp->next = nullptr;
+
+            curr->next = temp;
+            size++;
+            return;
+        }
+
+        addAtEndRecursively(curr->next, info);
     }
 
     //Search if the linked list contains negative number (return the first negative number)
@@ -77,8 +79,44 @@ public:
         return searchNegative(curr->next);
     }
 
-    //Delete specific value in the linked list
-    bool deleteRecursively(digit* curr, int info)
+    //Delete specific value by index in the linked list
+    bool deleteByPos(digit* curr, int index)
+    {
+        if (index >= 0 || index < size)
+        {
+            //If linked list is empty or reach the end of the linked list
+            if (curr == nullptr)
+            {
+                return false;
+            }
+
+            //Special case: digit to be deleted is the first digit
+            if (index == 0)
+            {
+                head = head->next;
+                delete curr;
+                size--;
+                return true;
+            }
+
+            //Normal case: degit to be deleted is not the first digit
+            if (curr->next != nullptr && index == 1)
+            {
+                //Update the pointer
+                digit* temp = new digit;
+                temp = curr->next;
+                curr->next = temp->next;
+                delete temp;
+                size--;
+                return true;
+            }
+
+            return deleteByPos(curr->next, index - 1);
+        }
+    }
+
+    //Delete specific value by value in the linked list
+    bool deleteByValue(digit* curr, int info)
     {
         //If linked list is empty or reach the end of the linked list
         if (curr == nullptr)
@@ -91,7 +129,7 @@ public:
         {
             head = head->next;
             delete curr;
-
+            size--;
             return true;
         }
 
@@ -103,22 +141,97 @@ public:
             temp = curr->next;
             curr->next = temp->next;
             delete temp;
-                                  
+            size--;
             return true;
         }
 
-        return deleteRecursively(curr->next, info);
+        return deleteByValue(curr->next, info);
     }
 
-    void print()
+    //Using insertion sort to sort sub list
+    void insertionSort()
     {
-        digit* temp = new digit;
-        temp = head;
-
-        while (temp != nullptr)
+        //If the list is empty or has only one digit, no need to sort
+        if (head == nullptr || head->next == nullptr)
         {
-            cout << temp->info << endl;
-            temp = temp->next;
+            return;
+        }
+
+        //Create a dummy pointer (before head)
+        digit* dummy = new digit;
+        dummy->next = head;
+
+        digit* curr = head;           //For unsorted list
+        digit* prev = nullptr;        //For sorted list
+        digit* temp = nullptr;        //For storing digit that need to be moved
+
+        //Check the condition (make sure curr digit can compare to next digit)
+        while (curr != nullptr && curr->next != nullptr)
+        {
+            //If these two digits are in the right order, move to next digit
+            if (curr->info <= curr->next->info)
+            {
+                curr = curr->next;
+            }
+            else
+            {
+                //Use temp to store the digit that need to move
+                temp = curr->next;
+                curr->next = curr->next->next;
+
+                //Traverse the sorted list to see where to stop
+                prev = dummy;
+                while (prev->next->info <= temp->info)
+                {
+                    prev = prev->next;
+                }
+
+                //If the prev pointer ddin't move, temp will be insert at the beginning of the list
+                if (prev == dummy)
+                {
+                    temp->next = head;
+                    head = temp;
+                    dummy->next = head;
+                }
+                else
+                {
+                    //Update the link
+                    temp->next = prev->next;
+                    prev->next = temp;
+                }
+            }
+        }
+    }
+
+    void mergeSortedList(digit* first, digit* second)
+    {
+        //Make sure both lists are not empty
+        while (first != nullptr && second != nullptr)
+        {
+            if (first->info <= second->info)
+            {
+                addAtEndRecursively(this->getHead(), first->info);
+                first = first->next;
+            }
+            else if (first->info > second->info)
+            {
+                addAtEndRecursively(this->getHead(), second->info);
+                second = second->next;
+            }
+        }
+
+        //If the first list is not empty
+        while (first != nullptr)
+        {
+            addAtEndRecursively(this->getHead(), first->info);
+            first = first->next;
+        }
+
+        //If the second list is not empty
+        while (second != nullptr)
+        {
+            addAtEndRecursively(this->getHead(), second->info);
+            second = second->next;
         }
     }
 };
@@ -384,13 +497,14 @@ int main(int argc, char* argv[])
         string line = "";
         string currentUser = "";
         string bin = "";
-        string password_str = "";
-        int password = 0;
+        string password = "";
         int numOfInvalid = 0;
         int result = 0;
         int negativeNum = 0;
         digitList ScarletList;
         digitList TravisList;
+
+        // ----------------------------------------------------------- ADD DIGIT -----------------------------------------------------
 
         while (getline(inFS, line))
         {
@@ -413,8 +527,7 @@ int main(int argc, char* argv[])
                 getline(inSS, bin, ':');
 
                 //Read password
-                getline(inSS, password_str);
-                password = stoi(password_str);
+                getline(inSS, password);
             }
 
             else if (line == "Scarlet")
@@ -435,11 +548,11 @@ int main(int argc, char* argv[])
 
                     if (currentUser == "Scarlet")
                     {
-                        ScarletList.addAtEnd(result);
+                        ScarletList.addAtEndRecursively(ScarletList.getHead(), result);
                     }
                     else if (currentUser == "Travis")
                     {
-                        TravisList.addAtEnd(result);
+                        TravisList.addAtEndRecursively(TravisList.getHead(), result);
                     }
                 }
                 else
@@ -449,6 +562,8 @@ int main(int argc, char* argv[])
             }
         }
 
+        // ---------------------------------------------------- DELETE NEGATIVE ---------------------------------------------------
+
         bool isDelete = false;
 
         negativeNum = ScarletList.searchNegative(ScarletList.getHead());
@@ -457,24 +572,19 @@ int main(int argc, char* argv[])
         while (negativeNum != 0)
         {
             //Delete negative number
-            ScarletList.deleteRecursively(ScarletList.getHead(), negativeNum);
+            ScarletList.deleteByValue(ScarletList.getHead(), negativeNum);
 
             //Delete correspond positive number
-            isDelete = ScarletList.deleteRecursively(ScarletList.getHead(), abs(negativeNum));
+            isDelete = ScarletList.deleteByValue(ScarletList.getHead(), abs(negativeNum));
 
             //If can not find number in Scarlet's list, try to find it in Travis's list 
             if (!isDelete)
             {
-                TravisList.deleteRecursively(TravisList.getHead(), abs(negativeNum));
+                TravisList.deleteByValue(TravisList.getHead(), abs(negativeNum));
             }
 
             negativeNum = ScarletList.searchNegative(ScarletList.getHead());
         }
-
-        ScarletList.print();
-        cout << endl;
-        TravisList.print();
-        cout << endl;
 
         negativeNum = TravisList.searchNegative(TravisList.getHead());
 
@@ -482,21 +592,21 @@ int main(int argc, char* argv[])
         while (negativeNum != 0)
         {
             //Delete negative number
-            TravisList.deleteRecursively(TravisList.getHead(), negativeNum);
+            TravisList.deleteByValue(TravisList.getHead(), negativeNum);
 
             //Delete correspond positive number
-            isDelete = TravisList.deleteRecursively(TravisList.getHead(), abs(negativeNum));
+            isDelete = TravisList.deleteByValue(TravisList.getHead(), abs(negativeNum));
 
             //If can not find number in Travis's list, try to find it in Scarlet's list 
             if (!isDelete)
             {
-                ScarletList.deleteRecursively(ScarletList.getHead(), abs(negativeNum));
+                ScarletList.deleteByValue(ScarletList.getHead(), abs(negativeNum));
             }
 
             negativeNum = TravisList.searchNegative(TravisList.getHead());
         }
 
-        //Print Scarlet's list to the output file
+        // -------------------------------------------------------- PRINT ORIGINAL -----------------------------------------------
         digit* temp = new digit;
         temp = ScarletList.getHead();
 
@@ -523,14 +633,56 @@ int main(int argc, char* argv[])
 
         outFS << temp->info << "]" << endl;
 
-        ScarletList.print();
-        cout << endl;
-        TravisList.print();
-        cout << endl;
+        // -------------------------------------------------------------- SORT LIST ----------------------------------------------------------
 
-        //cout << password << endl;
-        //cout << numOfInvalid << endl;
+        ScarletList.insertionSort();
+        TravisList.insertionSort();
 
+        // -------------------------------------------------------------- MERGE LIST ----------------------------------------------------------
+
+        digitList mergeList;
+        mergeList.mergeSortedList(ScarletList.getHead(), TravisList.getHead());
+
+        //Do not delete if no expression is invalid
+        if (numOfInvalid > 0)
+        {
+            mergeList.deleteByPos(mergeList.getHead(), numOfInvalid);
+        }
+
+        // ------------------------------------------------------------PRINT SORTED LIST ---------------------------------------------------
+        
+        string decodedPassword = "";
+
+        temp = mergeList.getHead();
+
+        while (temp != nullptr)
+        {
+            decodedPassword += to_string(temp->info);
+            temp = temp->next;
+        }
+
+        outFS << "Decoded passcode: ";
+
+        for (int i = 0; i < decodedPassword.length(); i++)
+        {
+            outFS << "| " << decodedPassword[i] << " ";
+        }
+
+        outFS << "|" << endl;
+
+        outFS << "Actual passcode: ";
+
+        for (int i = 0; i < password.length(); i++)
+        {
+            outFS << "| " << password[i] << " ";
+        }
+
+        outFS << "|" << endl;
+
+        if (decodedPassword == password)
+        {
+            outFS << "Treasure unlocked!";
+        }
     }
     catch (runtime_error & e)
     {
