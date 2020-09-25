@@ -82,37 +82,40 @@ public:
     //Delete specific value by index in the linked list
     bool deleteByPos(digit* curr, int index)
     {
-        if (index >= 0 || index < size)
+        //If index is invalid
+        if (index < 0 || index >= size)
         {
-            //If linked list is empty or reach the end of the linked list
-            if (curr == nullptr)
-            {
-                return false;
-            }
-
-            //Special case: digit to be deleted is the first digit
-            if (index == 0)
-            {
-                head = head->next;
-                delete curr;
-                size--;
-                return true;
-            }
-
-            //Normal case: degit to be deleted is not the first digit
-            if (curr->next != nullptr && index == 1)
-            {
-                //Update the pointer
-                digit* temp = new digit;
-                temp = curr->next;
-                curr->next = temp->next;
-                delete temp;
-                size--;
-                return true;
-            }
-
-            return deleteByPos(curr->next, index - 1);
+            return false;
         }
+
+        //If linked list is empty or reach the end of the linked list
+        if (curr == nullptr)
+        {
+            return false;
+        }
+
+        //Special case: digit to be deleted is the first digit
+        if (index == 0)
+        {
+            head = head->next;
+            delete curr;
+            size--;
+            return true;
+        }
+
+        //Normal case: degit to be deleted is not the first digit
+        if (curr->next != nullptr && index == 1)
+        {
+            //Update the pointer
+            digit* temp = new digit;
+            temp = curr->next;
+            curr->next = temp->next;
+            delete temp;
+            size--;
+            return true;
+        }
+
+        return deleteByPos(curr->next, index - 1);
     }
 
     //Delete specific value by value in the linked list
@@ -466,12 +469,12 @@ int main(int argc, char* argv[])
     ArgumentManager am(argc, argv);
 
     //Get the filename of argument name "input" and "output"
-    //string input = am.get("input");
-    //string output = am.get("output");
+    string input = am.get("input");
+    string output = am.get("output");
 
     //Test
-    string input = "input13.txt";
-    string output = "output13.txt";
+    //string input = "input13.txt";
+    //string output = "output13.txt";
 
     ifstream inFS;
     ofstream outFS;
