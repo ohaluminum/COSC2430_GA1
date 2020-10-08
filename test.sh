@@ -72,5 +72,95 @@ else
     # remove the file 1.diff
     rm -f 3.diff
 fi
+# For test case 4
+# input14.txt and output14.out
+./${program} "input=input${group}4.txt;output=output${group}4.txt" 1>1.stdcout 2>1.stderr
+# compare 4.out with 4.ans, output the difference to 4.diff
+diff -iEBwu ans${group}4.txt output${group}4.txt > 4.diff
+# if diff returns nothing, it means you pass the test case (Your output file 4.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 4 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 4    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 4 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 4    \033[1;92mPASSED.\033[0m"
+    # remove the file 4.diff
+    rm -f 4.diff
+fi
+# For test case 5
+# input15.txt and output15.out
+./${program} "input=input${group}5.txt;output=output${group}5.txt" 1>1.stdcout 2>1.stderr
+# compare 5.out with 5.ans, output the difference to 5.diff
+diff -iEBwu ans${group}5.txt output${group}5.txt > 5.diff
+# if diff returns nothing, it means you pass the test case (Your output file 5.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 5 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 5    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 5 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 5    \033[1;92mPASSED.\033[0m"
+    # remove the file 5.diff
+    rm -f 5.diff
+fi
+# For test case 6
+# input16.txt and output14.out
+./${program} "input=input${group}6.txt;output=output${group}6.txt" 1>1.stdcout 2>1.stderr
+# compare 6.out with 6.ans, output the difference to 6.diff
+diff -iEBwu ans${group}6.txt output${group}6.txt > 6.diff
+# if diff returns nothing, it means you pass the test case (Your output file 6.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 6 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 6    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 6 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 6    \033[1;92mPASSED.\033[0m"
+    # remove the file 6.diff
+    rm -f 6.diff
+fi
+# For test case 7
+# input17.txt and output17.out
+./${program} "input=input${group}7.txt;output=output${group}7.txt" 1>1.stdcout 2>1.stderr
+# compare 7.out with 7.ans, output the difference to 7.diff
+diff -iEBwu ans${group}7.txt output${group}7.txt > 7.diff
+# if diff returns nothing, it means you pass the test case (Your output file 7.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 7 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 7    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 7 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 7    \033[1;92mPASSED.\033[0m"
+    # remove the file 7.diff
+    rm -f 7.diff
+fi
+# For test case 8
+# input18.txt and output18.out
+./${program} "input=input${group}8.txt;output=output${group}8.txt" 1>1.stdcout 2>1.stderr
+# compare 8.out with 8.ans, output the difference to 8.diff
+diff -iEBwu ans${group}8.txt output${group}8.txt > 8.diff
+# if diff returns nothing, it means you pass the test case (Your output file 8.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 8 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 8    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 8 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 8    \033[1;92mPASSED.\033[0m"
+    # remove the file 8.diff
+    rm -f 8.diff
+fi
+# For test case 9
+# input19.txt and output19.out
+./${program} "input=input${group}9.txt;output=output${group}9.txt" 1>1.stdcout 2>1.stderr
+# compare 9.out with 9.ans, output the difference to 9.diff
+diff -iEBwu ans${group}9.txt output${group}9.txt > 9.diff
+# if diff returns nothing, it means you pass the test case (Your output file 9.out is correct)
+if [ $? -ne 0 ]; then
+    # display "Test case 9 FAILED" to the screen. The word "FAILED" is highlighted in Red color
+    echo -e "Test case 9    \033[1;91mFAILED.\033[0m"
+else
+    # display "Test case 9 PASSED" to the screen. The word "PASSED" is highlighted in Green color
+    echo -e "Test case 9    \033[1;92mPASSED.\033[0m"
+    # remove the file 9.diff
+    rm -f 9.diff
+fi
 
 

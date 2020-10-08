@@ -424,7 +424,6 @@ int evaluatePostfix(string postfix)
     //Traversing the Expression
     for (unsigned int i = 0; i < postfix.length(); i++)
     {
-        cout << "YEA" << endl;
         //If postfix[i] is a digit, push it to the stack
         if (isdigit(postfix[i]))
         {
@@ -486,12 +485,12 @@ int main(int argc, char* argv[])
     ArgumentManager am(argc, argv);
 
     //Get the filename of argument name "input" and "output"
-    //string input = am.get("input");
-    //string output = am.get("output");
+    string input = am.get("input");
+    string output = am.get("output");
 
     //Test
-    string input = "input19.txt";
-    string output = "output19.txt";
+    //string input = "input17.txt";
+    //string output = "output17.txt";
 
     ifstream inFS;
     ofstream outFS;
@@ -567,26 +566,7 @@ int main(int argc, char* argv[])
                 //If the expression is balanced, then evaluate the expression
                 if (checkBalanced(line))
                 {
-                    cout << line << endl;
-
-                    for (int i = 0; i < line.length(); i++)
-                    {
-                        cout << i << " " << line[i] << endl;
-                    }
-
-                    line = infixToPostfix(line);
-                    cout << line << endl;
-                    cout << line.length() << endl;
-
-
-                    for (int j = 0; j < line.length(); j++)
-                    {
-                        cout << j << " " << line[j] << endl;
-                    }
-
-
-
-                    result = evaluatePostfix(line);
+                    result = evaluatePostfix(infixToPostfix(line));
 
                     if (currentUser == "Scarlet")
                     {
