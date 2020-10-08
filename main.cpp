@@ -424,6 +424,7 @@ int evaluatePostfix(string postfix)
     //Traversing the Expression
     for (unsigned int i = 0; i < postfix.length(); i++)
     {
+        cout << "YEA" << endl;
         //If postfix[i] is a digit, push it to the stack
         if (isdigit(postfix[i]))
         {
@@ -462,6 +463,22 @@ bool hasColon(string str)
     return false;
 }
 
+//Remove space from a string
+string removeSpace(string line)
+{
+    string newStr = "";
+
+    for (unsigned int i = 0; i < line.length(); i++)
+    {
+        if (line[i] != ' ')
+        {
+            newStr += line[i];
+        }
+    }
+
+    return newStr;
+}
+
 // ------------------------------------------------ MAIN FUNCTION ----------------------------------------------------
 
 int main(int argc, char* argv[])
@@ -469,12 +486,12 @@ int main(int argc, char* argv[])
     ArgumentManager am(argc, argv);
 
     //Get the filename of argument name "input" and "output"
-    string input = am.get("input");
-    string output = am.get("output");
+    //string input = am.get("input");
+    //string output = am.get("output");
 
     //Test
-    //string input = "input13.txt";
-    //string output = "output13.txt";
+    string input = "input19.txt";
+    string output = "output19.txt";
 
     ifstream inFS;
     ofstream outFS;
@@ -517,6 +534,9 @@ int main(int argc, char* argv[])
                 continue;
             }
 
+            //Remove space in the line
+            line = removeSpace(line);
+
             //Only password line contains colon
             if (hasColon(line))
             {
@@ -547,7 +567,26 @@ int main(int argc, char* argv[])
                 //If the expression is balanced, then evaluate the expression
                 if (checkBalanced(line))
                 {
-                    result = evaluatePostfix(infixToPostfix(line));
+                    cout << line << endl;
+
+                    for (int i = 0; i < line.length(); i++)
+                    {
+                        cout << i << " " << line[i] << endl;
+                    }
+
+                    line = infixToPostfix(line);
+                    cout << line << endl;
+                    cout << line.length() << endl;
+
+
+                    for (int j = 0; j < line.length(); j++)
+                    {
+                        cout << j << " " << line[j] << endl;
+                    }
+
+
+
+                    result = evaluatePostfix(line);
 
                     if (currentUser == "Scarlet")
                     {
@@ -613,28 +652,44 @@ int main(int argc, char* argv[])
         digit* temp = new digit;
         temp = ScarletList.getHead();
 
-        outFS << "Scarlet: [";
-
-        while (temp->next != nullptr)
+        //If the list is empty
+        if (temp == nullptr)
         {
-            outFS << temp->info << ", ";
-            temp = temp->next;
+            outFS << "Scarlet: []" << endl;
         }
+        else
+        {
+            outFS << "Scarlet: [";
 
-        outFS << temp->info << "]" << endl;
+            while (temp->next != nullptr)
+            {
+                outFS << temp->info << ", ";
+                temp = temp->next;
+            }
+
+            outFS << temp->info << "]" << endl;
+        }
 
         //Print Travis's list to the output file
         temp = TravisList.getHead();
 
-        outFS << "Travis: [";
-
-        while (temp->next != nullptr)
+        //If the list is empty
+        if (temp == nullptr)
         {
-            outFS << temp->info << ", ";
-            temp = temp->next;
+            outFS << "Travis: []" << endl;
         }
+        else
+        {
+            outFS << "Travis: [";
 
-        outFS << temp->info << "]" << endl;
+            while (temp->next != nullptr)
+            {
+                outFS << temp->info << ", ";
+                temp = temp->next;
+            }
+
+            outFS << temp->info << "]" << endl;
+        }
 
         // -------------------------------------------------------------- SORT LIST ----------------------------------------------------------
 

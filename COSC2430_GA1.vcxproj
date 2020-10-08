@@ -153,12 +153,30 @@
     <Text Include="ans11.txt" />
     <Text Include="ans12.txt" />
     <Text Include="ans13.txt" />
+    <Text Include="ans14.txt" />
+    <Text Include="ans15.txt" />
+    <Text Include="ans16.txt" />
+    <Text Include="ans17.txt" />
+    <Text Include="ans18.txt" />
+    <Text Include="ans19.txt" />
     <Text Include="input11.txt" />
     <Text Include="input12.txt" />
     <Text Include="input13.txt" />
+    <Text Include="input14.txt" />
+    <Text Include="input15.txt" />
+    <Text Include="input16.txt" />
+    <Text Include="input17.txt" />
+    <Text Include="input18.txt" />
+    <Text Include="input19.txt" />
     <Text Include="output11.txt" />
     <Text Include="output12.txt" />
     <Text Include="output13.txt" />
+    <Text Include="output14.txt" />
+    <Text Include="output15.txt" />
+    <Text Include="output16.txt" />
+    <Text Include="output17.txt" />
+    <Text Include="output18.txt" />
+    <Text Include="output19.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h" />

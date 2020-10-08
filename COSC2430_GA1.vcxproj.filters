@@ -42,6 +42,60 @@
     <Text Include="output12.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="input14.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="input15.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="input16.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="input17.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="input18.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="input19.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output14.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output15.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output16.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output17.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output18.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="output19.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans14.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans15.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans16.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans17.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans18.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ans19.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h">
